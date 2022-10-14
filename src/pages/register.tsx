@@ -14,9 +14,9 @@ import { useMutation } from "urql";
 
 // import { useRegisterMutation } from "../../../reddit/src/gql/index";
 import { useRegisterMutation } from "../gql/graphql";
+import { toErrorMap } from "../utils/toErrorMap";
 
 interface registerProps {}
-
 
 export const Register: React.FC<registerProps> = ({}) => {
   const [, register] = useRegisterMutation();
@@ -24,11 +24,10 @@ export const Register: React.FC<registerProps> = ({}) => {
     <Wrapper>
       <Formik
         initialValues={{ username: "", password: "" }}
-        onSubmit={async (values, {setErrors}) => {
-          const response = await register(values); 
+        onSubmit={async (values, { setErrors }) => {
+          const response = await register(values);
           if (response.data?.register.errors) {
-          
-            setErrors({username:"I'm an error"})
+            setErrors(toErrorMap(response.data.register.errors));
           }
         }}>
         {({ isSubmitting }) => (
