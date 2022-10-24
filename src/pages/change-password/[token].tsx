@@ -21,13 +21,14 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             newPassword: values.newPassword,
           });
 
-          // 存在 error
+          console.log(response.data);
+
           if (response.data?.changePassword.errors) {
             const errorMap = toErrorMap(response.data.changePassword.errors);
             // if ('token' in errorMap) {
             // }
             setErrors(errorMap);
-          } else if (response.data?.changePassword.user) {
+          } else if (response.data?.changePassword) {
             // worked
             router.push('/');
           }
