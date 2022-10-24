@@ -1,15 +1,19 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import { NextPage } from 'next';
+import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { InputField } from '../../components/InputField';
 import { Wrapper } from '../../components/Wrapper';
 import { useChangePasswordMutation } from '../../gql/graphql';
+import { createUrqlClient } from '../../utils/createUrqlClient';
 import { toErrorMap } from '../../utils/toErrorMap';
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
   const router = useRouter();
   const [, ChangePassword] = useChangePasswordMutation();
+  const [tokenError, setTokenError] = useState('');
 
   return (
     <Wrapper variant="small">
@@ -25,11 +29,16 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
 
           if (response.data?.changePassword.errors) {
             const errorMap = toErrorMap(response.data.changePassword.errors);
-            // if ('token' in errorMap) {
-            // }
+            // 有 token 但是出问题
+            if ('token' in errorMap) {
+              // setTokenError(errorMap.token);
+              setTokenError(errorMap.token);
+            }
             setErrors(errorMap);
-          } else if (response.data?.changePassword) {
+            // 取到 user 说明 token 有效
+          } else if (response.data?.changePassword.user) {
             // worked
+            console.log('worked');
             router.push('/');
           }
         }}
@@ -42,7 +51,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
               label="New Password"
               type="password"
             />
-
+            {tokenError ? <Box color="red">{tokenError}</Box> : null}
             <Button
               mt={4}
               type="submit"
@@ -64,4 +73,4 @@ ChangePassword.getInitialProps = ({ query }) => {
   };
 };
 
-export default ChangePassword;
+export default withUrqlClient(createUrqlClient)(ChangePassword);
