@@ -32,7 +32,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             const errorMap = toErrorMap(response.data.changePassword.errors);
             // 有 token 但是出问题
             if ('token' in errorMap) {
-              // setTokenError(errorMap.token);
+
               setTokenError(errorMap.token);
             }
             setErrors(errorMap);

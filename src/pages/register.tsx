@@ -23,8 +23,7 @@ export const Register: React.FC<registerProps> = ({}) => {
         onSubmit={async (values, { setErrors }) => {
           const response = await register({ options: values });
 
-          console.log('values', values);
-          console.log('response', response);
+          console.log('-------------\n', response.data);
           if (response.data?.register.errors) {
             setErrors(toErrorMap(response.data.register.errors));
           } else if (response.data?.register.user) {
