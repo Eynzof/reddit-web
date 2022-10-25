@@ -15,7 +15,7 @@ interface registerProps {}
 
 export const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [, register] = useRegisterMutation()
   return (
     <Wrapper>
       <Formik
