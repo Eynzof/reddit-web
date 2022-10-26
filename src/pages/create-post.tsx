@@ -1,14 +1,22 @@
 import { Flex, Button, Box } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InputField } from '../components/InputField';
-import { useCreatePostMutation } from '../gql/graphql';
+import { useCreatePostMutation, useMeQuery } from '../gql/graphql';
 import { useRouter } from 'next/router';
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import { Layout } from '../components/Layout';
 const CreatePost: React.FC<{}> = ({}) => {
+  const [{ data }] = useMeQuery();
   const router = useRouter();
+  // == componentDidmount
+  useEffect(() => {
+    if (!data?.me) {
+      router.replace('/login');
+    }
+  // Only re-run the effect if data or router changes 
+  }, [data, router]);
   const [, createPost] = useCreatePostMutation();
   return (
     <Layout variant="small">
@@ -17,9 +25,7 @@ const CreatePost: React.FC<{}> = ({}) => {
         onSubmit={async (values) => {
           console.log(values);
           const { error } = await createPost({ input: values });
-          if (error?.message.includes('Not Authenticated')) {
-            router.push('/login');
-          } else {
+          if (!error) {
             router.push('/');
           }
         }}
