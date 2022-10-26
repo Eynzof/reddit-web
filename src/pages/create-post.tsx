@@ -2,7 +2,6 @@ import { Flex, Button, Box } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import React from 'react';
 import { InputField } from '../components/InputField';
-import { Wrapper } from '../components/Wrapper';
 import { useCreatePostMutation } from '../gql/graphql';
 import { useRouter } from 'next/router';
 import { withUrqlClient } from 'next-urql';
@@ -17,8 +16,12 @@ const CreatePost: React.FC<{}> = ({}) => {
         initialValues={{ title: '', text: '' }}
         onSubmit={async (values) => {
           console.log(values);
-          await createPost({ input: values });
-          router.push('/');
+          const { error } = await createPost({ input: values });
+          if (error?.message.includes('Not Authenticated')) {
+            router.push('/login');
+          } else {
+            router.push('/');
+          }
         }}
       >
         {({ isSubmitting }) => (
