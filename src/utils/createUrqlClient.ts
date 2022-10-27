@@ -52,7 +52,10 @@ const cursorPagination = (): Resolver => {
       console.log(data);
     });
 
-    return results;
+    return {
+      hasMore: true,
+      posts: results
+    };
   };
 };
 export const createUrqlClient = (ssrExchange: any) => ({
