@@ -1,10 +1,10 @@
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { usePostsQuery } from "../gql/graphql";
-import { Layout } from "../components/Layout";
-import NextLink from "next/link";
-import { Box, Heading, Link, Stack } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/react";
+import { withUrqlClient } from 'next-urql';
+import { createUrqlClient } from '../utils/createUrqlClient';
+import { usePostsQuery } from '../gql/graphql';
+import { Layout } from '../components/Layout';
+import NextLink from 'next/link';
+import { Box, Button, Flex, Heading, Link, Stack } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 const Index = () => {
   const [{ data }] = usePostsQuery({
     variables: {
@@ -13,9 +13,12 @@ const Index = () => {
   });
   return (
     <Layout>
-      <NextLink href={"/create-post"}>
-        <Link>create post</Link>
-      </NextLink>
+      <Flex align="center" mb={8}>
+        <Heading>Reddit</Heading>
+        <NextLink href={'/create-post'}>
+          <Link ml="auto">create post</Link>
+        </NextLink>
+      </Flex>
       {!data ? (
         <div>loading...</div>
       ) : (
@@ -23,11 +26,16 @@ const Index = () => {
           {data.posts.map((p) => (
             <Box key={p.id} p={5} shadow="md" borderWidth="1px">
               <Heading fontSize="xl">{p.title}</Heading>
-              <Text mt={4}>{p.text}</Text>
+              <Text mt={4}>{p.textSnippet}</Text>
             </Box>
           ))}
         </Stack>
       )}
+      <Flex>
+        <Button m="auto" my={8}>
+          Load More
+        </Button>
+      </Flex>
     </Layout>
   );
 };
