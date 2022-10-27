@@ -1,5 +1,10 @@
-import { cacheExchange } from '@urql/exchange-graphcache';
-import { dedupExchange, Exchange, fetchExchange } from 'urql';
+import { cacheExchange, Resolver } from '@urql/exchange-graphcache';
+import {
+  dedupExchange,
+  Exchange,
+  fetchExchange,
+  stringifyVariables,
+} from 'urql';
 import { pipe, tap } from 'wonka';
 import {
   LoginMutation,
@@ -22,6 +27,34 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
   );
 };
 
+const cursorPagination = (): Resolver => {
+  return (_parent, fieldArgs, cache, info) => {
+    const { parentKey: entityKey, fieldName } = info;
+    const allFields = cache.inspectFields(entityKey);
+    const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
+    const size = fieldInfos.length;
+    if (size === 0) {
+      return undefined;
+    }
+    const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
+    console.log('fieldKey', fieldKey);
+    const isItInTheCache = cache.resolve(entityKey, fieldKey);
+    console.log('isItInTheCache', isItInTheCache);
+
+    // if is not in the cache, then we have a partial returned
+    info.partial = !isItInTheCache;
+
+    const results: string[] = [];
+    fieldInfos.forEach((fi) => {
+      // extract values from cache
+      const data = cache.resolve(entityKey, fi.fieldKey) as string[];
+      results.push(...data);
+      console.log(data);
+    });
+
+    return results;
+  };
+};
 export const createUrqlClient = (ssrExchange: any) => ({
   url: 'http://localhost:4000/graphql',
   fetchOptions: {
@@ -30,6 +63,11 @@ export const createUrqlClient = (ssrExchange: any) => ({
   exchanges: [
     dedupExchange,
     cacheExchange({
+      resolvers: {
+        Query: {
+          posts: cursorPagination(),
+        },
+      },
       updates: {
         Mutation: {
           logout: (_result, args, cache, info) => {
