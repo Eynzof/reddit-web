@@ -1,5 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import { Flex, IconButton } from '@chakra-ui/react';
+import { ChakraProvider, Flex, IconButton } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { PostSnippetFragment, useVoteMutation } from '../gql/graphql';
 import { useToast } from '@chakra-ui/react';
@@ -15,75 +15,87 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   // useVoteMutation here
   const [, vote] = useVoteMutation();
   return (
-    <Flex
-      direction={'column'}
-      justifyContent={'center'}
-      alignItems={'center'}
-      mr={4}
-    >
-      <IconButton
-        aria-label={'upvote'}
-        icon={<ChevronUpIcon />}
-        w={6}
-        h={6}
-        onClick={async () => {
-          // has voted up so nothing happen
-          if (post.voteStatus === 1) {
-            console.log('there should be a toast');
-            {
-              () => {
-                toast({
-                  title: `already voted up`,
-                  status: 'error',
-                  duration: 9000,
-                  isClosable: true,
-                });
-              };
+    // This provider is for toast
+    <ChakraProvider>
+      <Flex
+        direction={'column'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        mr={4}
+      >
+        <IconButton
+          aria-label={'upvote'}
+          icon={<ChevronUpIcon />}
+          w={6}
+          h={6}
+          onClick={async () => {
+            // has voted up so nothing happen
+            if (post.voteStatus === 1) {
+              toast({
+                title: `Already voted up`,
+                position: 'bottom-left',
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+              });
+              return;
             }
-            return;
-          }
 
-          setLoadingState('updoot-loading');
-          await vote({
-            postId: post.id,
-            value: 1,
-          });
-          setLoadingState('not-loading');
-        }}
-        isLoading={loadingState === 'updoot-loading'}
-        background={post.voteStatus === 1 ? 'green' : 'null'}
-        colorScheme={post.voteStatus === 1 ? 'green' : undefined}
-      />
-      {post.points}
-      <IconButton
-        aria-label={'downvote'}
-        icon={<ChevronDownIcon />}
-        w={6}
-        h={6}
-        background={post.voteStatus === -1 ? 'red' : 'null'}
-        onClick={async () => {
-          // has voted up so nothing happen
-          if (post.voteStatus === -1) {
-            console.log('there should be a toast');
+            setLoadingState('updoot-loading');
+            await vote({
+              postId: post.id,
+              value: 1,
+            });
+            setLoadingState('not-loading');
             toast({
-              title: `already voted down`,
-              description: "We've created your account for you.",
-              status: 'error',
+              title: `Voted up`,
+              position: 'bottom-left',
+              status: 'success',
               duration: 9000,
               isClosable: true,
             });
-            return;
-          }
-          setLoadingState('updoot-loading');
-          await vote({
-            postId: post.id,
-            value: -1,
-          });
-          setLoadingState('not-loading');
-        }}
-        isLoading={loadingState === 'updoot-loading'}
-        colorScheme={post.voteStatus === -1 ? 'red' : undefined}
-      />
-    </Flex>
+          }}
+          isLoading={loadingState === 'updoot-loading'}
+          background={post.voteStatus === 1 ? 'green' : 'null'}
+          colorScheme={post.voteStatus === 1 ? 'green' : undefined}
+        />
+        {post.points}
+        <IconButton
+          aria-label={'downvote'}
+          icon={<ChevronDownIcon />}
+          w={6}
+          h={6}
+          background={post.voteStatus === -1 ? 'red' : 'null'}
+          onClick={async () => {
+            // has voted up so nothing happen
+            if (post.voteStatus === -1) {
+              toast({
+                title: `Already voted down`,
+                status: 'error',
+                position: 'bottom-left',
+                duration: 9000,
+                isClosable: true,
+              });
+              return;
+            }
+            setLoadingState('updoot-loading');
+            await vote({
+              postId: post.id,
+              value: -1,
+            });
+            setLoadingState('not-loading');
+            toast({
+              title: `Voted down`,
+              status: 'success',
+              position: 'bottom-left',
+              duration: 9000,
+              isClosable: true,
+            });
+          }}
+          isLoading={loadingState === 'updoot-loading'}
+          colorScheme={post.voteStatus === -1 ? 'red' : undefined}
+        />
+      </Flex>
+    </ChakraProvider>
   );
 };
