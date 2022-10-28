@@ -10,8 +10,8 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   const [loadingState, setLoadingState] = useState<
     'updoot-loading' | 'downdoot-loading' | 'not-loading'
   >('not-loading');
-  const [{ fetching, operation }, vote] = useVoteMutation();
-  console.log(operation?.variables.postId);
+  // useVoteMutation here
+  const [, vote] = useVoteMutation();
   return (
     <Flex
       direction={'column'}
@@ -33,7 +33,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           });
           setLoadingState('not-loading');
         }}
-        isLoading={fetching && operation?.variables.value === 1}
+        isLoading={loadingState === 'updoot-loading'}
       />
       {post.points}
       <IconButton
@@ -50,7 +50,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           });
           setLoadingState('not-loading');
         }}
-        isLoading={fetching && operation?.variables.value === 1}
+        isLoading={loadingState === 'updoot-loading'}
       />
     </Flex>
   );
