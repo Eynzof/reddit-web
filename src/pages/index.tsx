@@ -6,7 +6,6 @@ import NextLink from 'next/link';
 import { Box, Button, Flex, Heading, Link, Stack } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { randomUUID } from 'crypto';
 const Index = () => {
   const [variables, setVariables] = useState({
     limit: 10,
@@ -16,7 +15,7 @@ const Index = () => {
     variables,
   });
 
-  console.log(variables);
+  // console.log(variables);
 
   if (!fetching && !data) {
     return <div>queried failed for some reason</div>;
