@@ -1,4 +1,4 @@
-mutation Mutation {
+mutation Login {
   login(password: "7777", usernameOrEmail: "demo") {
     errors {
       field
