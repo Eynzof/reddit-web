@@ -1,11 +1,19 @@
 import { Box, Button, Flex, Link } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useLogoutMutation, useMeQuery } from '../gql/graphql';
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+  // default is server: paused true
+  const [paused, setpaused] = useState(true);
+
+  // browser specific code
+  useEffect(() => setpaused(false), []);
+
   const [{ data, fetching }] = useMeQuery({
+    pause: paused,
+    // pause: isServer(),
     // only fetch on client side
     // pause: typeof window === 'undefined',
   });
