@@ -2,26 +2,22 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
-  IconButton,
-  Link,
-  Stack,
+  Heading, Link,
+  Stack
 } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
 import NextLink from 'next/link';
 import { Layout } from '../components/Layout';
 import {
-  useDeletePostMutation,
   useMeQuery,
-  usePostsQuery,
+  usePostsQuery
 } from '../gql/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 import { Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { UpdootSection } from '../components/UpdootSection';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { EditDeletePostButtons } from '../components/EditDeletePostButtons';
+import { UpdootSection } from '../components/UpdootSection';
 const Index = () => {
   const [variables, setVariables] = useState({
     limit: 10,
@@ -61,7 +57,10 @@ const Index = () => {
                       {p.textSnippet}
                     </Text>
                     {medata?.me?.id == p.creator.id ? (
-                      <EditDeletePostButtons id={p.id} />
+                      <EditDeletePostButtons
+                        id={p.id}
+                        creatorId={p.creator.id}
+                      />
                     ) : null}
                   </Flex>
                 </Box>
