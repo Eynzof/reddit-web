@@ -21,6 +21,7 @@ import { Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { UpdootSection } from '../components/UpdootSection';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { EditDeletePostButtons } from '../components/EditDeletePostButtons';
 const Index = () => {
   const [variables, setVariables] = useState({
     limit: 10,
@@ -31,7 +32,6 @@ const Index = () => {
   });
 
   const [{ data: medata }] = useMeQuery();
-  const [, deletepost] = useDeletePostMutation();
 
   // console.log(variables);
 
@@ -61,31 +61,7 @@ const Index = () => {
                       {p.textSnippet}
                     </Text>
                     {medata?.me?.id == p.creator.id ? (
-                      <Box ml={'auto'}>
-                        <NextLink
-                          href="/post/edit/[id]"
-                          as={`/post/edit/${p.id}`}
-                        >
-                          <IconButton
-                            as={Link}
-                            // colorScheme={'red'}
-                            mr={4}
-                            aria-label={'Edit Post'}
-                            icon={<EditIcon />}
-                            onClick={() => {
-                              deletepost({ id: p.id });
-                            }}
-                          />
-                        </NextLink>
-                        <IconButton
-                          // colorScheme={'red'}
-                          aria-label={'Delete Post'}
-                          icon={<DeleteIcon />}
-                          onClick={() => {
-                            deletepost({ id: p.id });
-                          }}
-                        />
-                      </Box>
+                      <EditDeletePostButtons id={p.id} />
                     ) : null}
                   </Flex>
                 </Box>

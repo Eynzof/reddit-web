@@ -11,8 +11,6 @@ export const Post = ({}) => {
   const intId =
     typeof router.query.id === 'string' ? parseInt(router.query.id) : -1;
 
-  // intId: 318
-  console.log('intId:', intId);
   const [{ data, error, fetching }] = usePostQuery({
     pause: intId === -1,
     variables: {
@@ -20,9 +18,6 @@ export const Post = ({}) => {
     },
   });
 
-  console.log('fetching', fetching);
-  // undefined
-  console.log('data', data);
   if (fetching) {
     return <Layout>loading ...</Layout>;
   }
