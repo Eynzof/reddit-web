@@ -1,19 +1,10 @@
+import { Box, Button, Flex, Heading, Link, Stack } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
-import { createUrqlClient } from '../utils/createUrqlClient';
-import { usePostsQuery } from '../gql/graphql';
-import { Layout } from '../components/Layout';
 import NextLink from 'next/link';
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  Stack,
-} from '@chakra-ui/react';
+import { Layout } from '../components/Layout';
+import { usePostsQuery } from '../gql/graphql';
+import { createUrqlClient } from '../utils/createUrqlClient';
 
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { UpdootSection } from '../components/UpdootSection';
