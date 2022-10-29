@@ -1,17 +1,8 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading, Link,
-  Stack
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Link, Stack } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
 import NextLink from 'next/link';
 import { Layout } from '../components/Layout';
-import {
-  useMeQuery,
-  usePostsQuery
-} from '../gql/graphql';
+import { useMeQuery, usePostsQuery } from '../gql/graphql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 import { Text } from '@chakra-ui/react';
@@ -23,7 +14,7 @@ const Index = () => {
     limit: 10,
     cursor: null as null | string,
   });
-  const [{ data, fetching }] = usePostsQuery({
+  const [{ data, error, fetching }] = usePostsQuery({
     variables,
   });
 
@@ -32,7 +23,12 @@ const Index = () => {
   // console.log(variables);
 
   if (!fetching && !data) {
-    return <div>queried failed for some reason</div>;
+    return (
+      <div>
+        <div>queried failed for some reason</div>
+        <div>{error?.message}</div>
+      </div>
+    );
   }
   return (
     <Layout>
