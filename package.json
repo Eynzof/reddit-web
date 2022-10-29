@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next start",
     "gen": "graphql-codegen --config src/codegen.yml"
   },
   "dependencies": {
