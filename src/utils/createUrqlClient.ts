@@ -83,9 +83,8 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   if (isServer()) {
     cookie = ctx?.req?.headers?.cookie;
   }
-  console.log('process.ENV.API_URL', process.env.API_URL);
   return {
-    url: process.env.API_URL as string,
+    url: 'https://api.eynzo.me/graphql',
     fetchOptions: {
       credentials: 'include' as const,
       headers: cookie
