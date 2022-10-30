@@ -84,8 +84,9 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     cookie = ctx?.req?.headers?.cookie;
   }
 
+  console.log('process.ENV.API_URL', process.env.API_URL);
   return {
-    url: 'http://localhost:4000/graphql',
+    url: process.env.API_URL,
     fetchOptions: {
       credentials: 'include' as const,
       headers: cookie
